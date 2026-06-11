@@ -1,9 +1,7 @@
 backend:
-  name: github
+  name: git-gateway
   repo: Zaxonius/portfolio-site
   branch: main
-  auth_scope: repo
-  app_id: Ov23liSJk29J9MD2wLIS
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
