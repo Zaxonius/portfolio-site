@@ -1,33 +1,33 @@
 {
-    "images": [
-        {
-            "image": "https://images.unsplash.com/photo-1444464666168-49d633b86797?q=80&w=1200&auto=format&fit=crop",
-            "caption": "Cormorants, Royal Beach, Mornington.",
-            "category": "wildlife"
-        },
+  "images": [
+    {
+      "image": "https://images.unsplash.com/photo-1444464666168-49d633b86797?q=80&w=1200&auto=format&fit=crop",
+      "caption": "Cormorants, Royal Beach, Mornington.",
+      "category": "wildlife"
+    },
 
-        {
-            "image": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?q=80&w=1200&auto=format&fit=crop",
-            "caption": "Fox, early morning fog.",
-            "category": "wildlife"
-        },
+    {
+      "image": "https://images.unsplash.com/photo-1474511320723-9a56873867b5?q=80&w=1200&auto=format&fit=crop",
+      "caption": "Fox, early morning fog.",
+      "category": "wildlife"
+    },
 
-        {
-            "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop",
-            "caption": "Local football match.",
-            "category": "sport"
-        },
+    {
+      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop",
+      "caption": "Local football match.",
+      "category": "sport"
+    },
 
-        {
-            "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
-            "caption": "GT race car, Phillip Island.",
-            "category": "motorsport"
-        },
+    {
+      "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+      "caption": "GT race car, Phillip Island.",
+      "category": "motorsport"
+    },
 
-        {
-            "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200&auto=format&fit=crop",
-            "caption": "Aircraft banking over coastline.",
-            "category": "other"
-        }
-    ]
+    {
+      "image": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200&auto=format&fit=crop",
+      "caption": "Aircraft banking over coastline.",
+      "category": "other"
+    }
+  ]
 }
