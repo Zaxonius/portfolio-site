@@ -8,36 +8,28 @@ public_folder: "/images/uploads"
 
 collections:
   - name: "gallery"
-    label: "Gallery Images"
+    label: "Gallery"
 
-    files:
+    folder: "content/gallery"
+    create: true
 
-      - label: "Gallery"
-        name: "gallery"
-        file: "gallery.json"
+    slug: "{{slug}}"
 
-        fields:
+    fields:
+      - label: "Image"
+        name: "image"
+        widget: "image"
 
-          - label: "Images"
-            name: "images"
-            widget: "list"
+      - label: "Caption"
+        name: "caption"
+        widget: "string"
 
-            fields:
+      - label: "Category"
+        name: "category"
+        widget: "select"
 
-              - label: "Image"
-                name: "image"
-                widget: "image"
-
-              - label: "Caption"
-                name: "caption"
-                widget: "string"
-
-              - label: "Category"
-                name: "category"
-                widget: "select"
-
-                options:
-                  - wildlife
-                  - sport
-                  - motorsport
-                  - other
+        options:
+          - wildlife
+          - sport
+          - motorsport
+          - other
