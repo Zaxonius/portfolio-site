@@ -248,3 +248,21 @@ body.fade-out {
     }
 
 }
+
+.gallery-title {
+
+    width: 90%;
+
+    margin: auto;
+
+    margin-bottom: 60px;
+
+}
+
+.gallery-title h1 {
+
+    font-size: 4rem;
+
+    font-weight: 700;
+
+}
