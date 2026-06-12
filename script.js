@@ -89,6 +89,8 @@ async function loadGallery() {
 
     const data = await response.json();
 
+    data.sort(() => Math.random() - 0.5);
+
     data.forEach(item => {
 
         const div = document.createElement("div");
