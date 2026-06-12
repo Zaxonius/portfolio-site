@@ -73,7 +73,17 @@
       gallery: gallery
     };
 
-    console.log("Photo data:", photoData);
+    const response = await fetch("photo-api.keytehipkins.workers.dev", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(photoData)
+});
+
+const result = await response.json();
+
+console.log("Mongo result:", result);
 
     status.innerText = "Upload successful!";
     document.getElementById("preview").src = data.secure_url;
