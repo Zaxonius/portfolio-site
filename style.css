@@ -113,10 +113,8 @@ body.fade-out {
 
     padding: 30px;
 
-    background: linear-gradient(
-        transparent,
-        rgba(0,0,0,0.8)
-    );
+    background: linear-gradient(transparent,
+            rgba(0, 0, 0, 0.8));
 }
 
 /* TOP BAR */

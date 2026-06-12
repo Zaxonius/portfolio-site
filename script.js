@@ -51,7 +51,7 @@ async function loadGallery() {
 
     const data = await response.json();
 
-    const filtered = data.images.filter( item => item.category === category );
+    const filtered = data.images.filter(item => item.category === category);
 
     filtered.forEach(item => {
 
