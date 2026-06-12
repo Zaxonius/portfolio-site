@@ -38,8 +38,16 @@
       const UPLOAD_PRESET = "portfolio-upload";
 
       async function uploadImage() {
-        const file = document.getElementById("fileInput").files[0];
+        let file = document.getElementById("fileInput").files[0];
         const status = document.getElementById("status");
+
+        if (!file) {
+          status.innerText = "Please select a file.";
+          return;
+        }
+
+        // compress BEFORE upload
+        file = await compressImage(file, 500, 0.85);
 
         const description = document.getElementById("description").value;
         const gallery = document.getElementById("gallery").value;

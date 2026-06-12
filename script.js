@@ -1,3 +1,33 @@
+async function compressImage(file, maxWidth = 500, quality = 0.8) {
+  return new Promise((resolve) => {
+    const img = document.createElement("img");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      img.src = e.target.result;
+    };
+
+    img.onload = function () {
+
+      const scale = maxWidth / img.width;
+
+      canvas.width = maxWidth;
+      canvas.height = img.height * scale;
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/jpeg", quality);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
 /* PAGE LOAD */
 
 window.addEventListener("load", () => {
