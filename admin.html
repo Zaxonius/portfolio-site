@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloudinary Test Upload</title>
+</head>
+<body>
+
+  <h2>Test Image Upload</h2>
+
+  <input type="file" id="fileInput">
+  <button onclick="uploadImage()">Upload</button>
+
+  <input type="text" id="description" placeholder="Short description (e.g. Cormorants, Royal Beach, Mornington)">
+
+<select id="gallery">
+  <option value="wildlife">Wildlife</option>
+  <option value="sport">Sport</option>
+  <option value="motorsport">Motorsport</option>
+  <option value="other">Other</option>
+</select>
+
+  <p id="status"></p>
+
+  <img id="preview" style="max-width:300px; display:block; margin-top:20px;" />
+
+  <script>
+    const CLOUD_NAME = "do3eq8jz9";
+    const UPLOAD_PRESET = "portfolio-upload";
+
+   async function uploadImage() {
+  const file = document.getElementById("fileInput").files[0];
+  const status = document.getElementById("status");
+
+  const description = document.getElementById("description").value;
+  const gallery = document.getElementById("gallery").value;
+
+  if (!file) {
+    status.innerText = "Please select a file.";
+    return;
+  }
+
+  status.innerText = "Uploading...";
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData
+    }
+  );
+
+  const data = await res.json();
+
+  console.log("Cloudinary response:", data);
+
+  if (data.secure_url) {
+
+    const photoData = {
+      url: data.secure_url,
+      description: description,
+      gallery: gallery
+    };
+
+    console.log("Photo data:", photoData);
+
+    status.innerText = "Upload successful!";
+    document.getElementById("preview").src = data.secure_url;
+
+  } else {
+    status.innerText = "Upload failed. Check console.";
+  }
+}
+  </script>
+
+</body>
+</html>
