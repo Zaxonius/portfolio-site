@@ -1,5 +1,0 @@
----
-image: "https://images.unsplash.com/photo-1444464666168-49d633b86797?q=80&w=1200&auto=format&fit=crop"
-caption: "Cormorants, Royal Beach, Mornington."
-category: "wildlife"
----
