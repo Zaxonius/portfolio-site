@@ -3,6 +3,8 @@ backend:
   repo: Zaxonius/portfolio-site
   branch: main
 
+publish_mode: editorial_workflow
+
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
