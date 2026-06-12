@@ -65,7 +65,11 @@ async function loadGallery() {
         div.className = "gallery-item";
 
         div.innerHTML = `
-            <img src="${item.url}" alt="${item.description}">
+            <img 
+                src="${item.url.replace('/upload/', '/upload/w_500,q_auto,f_auto/')}" 
+                alt="${item.description}"
+                loading="lazy"
+            />
             <p>${item.description || ""}</p>
         `;
 
