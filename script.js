@@ -77,4 +77,26 @@ async function loadGallery() {
     });
 }
 
+async function login() {
+
+    const password = document.getElementById("passwordInput").value;
+
+    const res = await fetch("https://photo-api.keytehipkins.workers.dev/admin-login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ password })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+    } else {
+        alert("Wrong password");
+    }
+}
+
 loadGallery();
