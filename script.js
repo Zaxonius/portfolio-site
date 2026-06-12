@@ -1,4 +1,4 @@
-async function compressImage(file, maxWidth = 500, quality = 0.8) {
+async function compressImage(file, maxWidth = 1000, quality = 0.85) {
   return new Promise((resolve) => {
     const img = document.createElement("img");
     const canvas = document.createElement("canvas");
