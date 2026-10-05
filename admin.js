@@ -4,6 +4,23 @@ const names = { wildlife: 'Wildlife & animals', sport: 'Sport', motorsport: 'Mot
 let token = sessionStorage.getItem('portfolio-session') || '';
 let photos = [], selectedFile = null, uploadedUrl = '', previewUrl = '', editingId = '', deletingId = '';
 let uploadBusy = false;
+let activeGallery = '', galleries = [];
+let galleryBusy = false;
+let editingScope = '', deletingScope = '';
+const photoEndpoint = (scope = activeGallery) => scope ? `/galleries/${encodeURIComponent(scope)}/photos` : '/photos';
+function setGallery() {
+  const custom = galleries.find(g => g.slug === activeGallery);
+  $('uploadCategory').hidden = Boolean(custom); $('filterLabel').hidden = Boolean(custom);
+  $('uploadTitle').textContent = custom ? `Upload to ${custom.name}` : 'Upload photo';
+  $('shareGallery').hidden = !custom;
+  if (custom) { $('galleryLink').href = `${window.location.origin}/${custom.slug}`; $('galleryLink').textContent = $('galleryLink').href; }
+}
+function galleryOptions() {
+  $('galleryManager').replaceChildren(new Option('Public galleries', ''));
+  for (const gallery of galleries) $('galleryManager').append(new Option(`${gallery.name} (${gallery.photo_count})`, gallery.slug));
+  $('galleryManager').value = activeGallery;
+  setGallery();
+}
 function message(id, text, state = '') { $(id).textContent = text; $(id).dataset.state = state; }
 function showLogin() {
   token = ''; sessionStorage.removeItem('portfolio-session');
@@ -26,29 +43,36 @@ async function api(path, options = {}) {
 }
 function showPanel() { $('loginBox').hidden = true; $('adminPanel').hidden = false; $('logout').hidden = false; }
 async function refresh() {
+  const scope = activeGallery;
   $('refresh').disabled = true; message('libraryStatus', 'Loading your photographs…');
-  try { const data = await api('/photos'); if (!Array.isArray(data)) throw new Error('The photo service returned an unexpected response.'); photos = data; render(); message('libraryStatus', ''); }
+  try {
+    const [listing, result] = await Promise.all([api('/galleries'), api(scope ? `/galleries/${encodeURIComponent(scope)}` : '/photos')]);
+    if (scope !== activeGallery) return;
+    const data = scope ? result.photos : result;
+    if (!Array.isArray(data) || !Array.isArray(listing)) throw new Error('The photo service returned an unexpected response.');
+    galleries = listing; photos = data; galleryOptions(); render(); message('libraryStatus', '');
+  }
   catch (error) { message('libraryStatus', error.message, 'error'); }
   finally { $('refresh').disabled = false; }
 }
 function render() {
   const search = $('search').value.trim().toLowerCase(), filter = $('filter').value;
-  const visible = photos.filter(p => (filter === 'all' || p.gallery === filter) && p.description.toLowerCase().includes(search));
+  const visible = photos.filter(p => (activeGallery || filter === 'all' || p.gallery === filter) && p.description.toLowerCase().includes(search));
   $('photoCount').textContent = `${visible.length} of ${photos.length} photographs`;
   $('photoGrid').replaceChildren();
   if (!visible.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = photos.length ? 'No matching photos.' : 'No photos yet.'; $('photoGrid').append(empty); }
   for (const photo of visible) {
     const card = document.createElement('article'); card.className = 'photo-card';
-    const image = document.createElement('img'); image.src = photo.url.replace('/upload/', '/upload/w_500,q_auto,f_auto/'); image.alt = photo.description || names[photo.gallery]; image.loading = 'lazy';
+    const image = document.createElement('img'); image.src = photo.url.replace('/upload/', '/upload/w_500,q_auto,f_auto/'); image.alt = photo.description || 'Photograph'; image.loading = 'lazy';
     const details = document.createElement('div'); details.className = 'photo-details';
     const tag = document.createElement('span'); tag.className = 'category-tag'; tag.textContent = names[photo.gallery];
     const caption = document.createElement('p'); caption.textContent = photo.description || 'Untitled photograph';
     const actions = document.createElement('div'); actions.className = 'photo-actions';
     const edit = document.createElement('button'); edit.className = 'quiet'; edit.textContent = 'Edit'; edit.addEventListener('click', () => {
-      editingId = photo.id; $('editDescription').value = photo.description; $('editGallery').value = photo.gallery; $('editPreview').src = image.src; message('editStatus', ''); $('editDialog').showModal();
+      editingId = photo.id; editingScope = activeGallery; $('editCategory').hidden = Boolean(activeGallery); $('editDescription').value = photo.description; $('editGallery').value = photo.gallery || 'other'; $('editPreview').src = image.src; message('editStatus', ''); $('editDialog').showModal();
     });
-    const remove = document.createElement('button'); remove.className = 'quiet'; remove.textContent = 'Remove'; remove.addEventListener('click', () => { deletingId = photo.id; message('deleteStatus', ''); $('deleteDialog').showModal(); });
-    actions.append(edit, remove); details.append(tag, caption, actions); card.append(image, details); $('photoGrid').append(card);
+    const remove = document.createElement('button'); remove.className = 'quiet'; remove.textContent = 'Remove'; remove.addEventListener('click', () => { deletingId = photo.id; deletingScope = activeGallery; message('deleteStatus', ''); $('deleteDialog').showModal(); });
+    actions.append(edit, remove); if (!activeGallery) details.append(tag); details.append(caption, actions); card.append(image, details); $('photoGrid').append(card);
   }
 }
 $('loginForm').addEventListener('submit', async event => {
@@ -85,11 +109,11 @@ async function compress(file) {
   } finally { image.close(); }
 }
 $('uploadForm').addEventListener('submit', async event => {
-  event.preventDefault(); if (uploadBusy) return;
+  event.preventDefault(); if (uploadBusy || galleryBusy) return;
   if (!selectedFile) { message('status', 'Choose a photograph first.', 'error'); return; }
   uploadBusy = true;
-  const controls = [...$('uploadForm').elements, $('logout')]; controls.forEach(el => el.disabled = true);
-  const caption = $('description').value.trim(), gallery = $('gallery').value;
+  const controls = [...$('uploadForm').elements, ...$('createGalleryForm').elements, $('galleryManager'), $('logout')]; controls.forEach(el => el.disabled = true);
+  const caption = $('description').value.trim(), gallery = $('gallery').value, uploadScope = activeGallery;
   try {
     if (!uploadedUrl) {
       message('status', 'Preparing your photograph…'); const blob = await compress(selectedFile);
@@ -97,7 +121,7 @@ $('uploadForm').addEventListener('submit', async event => {
       message('status', 'Uploading your photograph…'); const data = await api('/uploads', { method: 'POST', body: form }); uploadedUrl = data.url;
     }
     message('status', 'Publishing to your gallery…');
-    await api('/photos', { method: 'POST', body: JSON.stringify({ url: uploadedUrl, description: caption, gallery }) });
+    await api(photoEndpoint(uploadScope), { method: 'POST', body: JSON.stringify({ url: uploadedUrl, description: caption, ...(uploadScope ? {} : { gallery }) }) });
     message('status', 'Uploaded.', 'success');
     uploadedUrl = ''; selectedFile = null; $('uploadForm').reset(); $('preview').hidden = true; $('fileLabel').textContent = 'Photo';
     if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = ''; }
@@ -111,16 +135,31 @@ $('refresh').addEventListener('click', refresh); $('search').addEventListener('i
 $('closeEdit').addEventListener('click', () => $('editDialog').close());
 $('editForm').addEventListener('submit', async event => {
   event.preventDefault(); $('saveEdit').disabled = true; $('closeEdit').disabled = true;
-  try { const photo = await api(`/photos/${encodeURIComponent(editingId)}`, { method: 'PATCH', body: JSON.stringify({ description: $('editDescription').value, gallery: $('editGallery').value }) }); photos = photos.map(p => p.id === photo.id ? photo : p); render(); $('editDialog').close(); }
+  try { const photo = await api(`${photoEndpoint(editingScope)}/${encodeURIComponent(editingId)}`, { method: 'PATCH', body: JSON.stringify({ description: $('editDescription').value, ...(editingScope ? {} : { gallery: $('editGallery').value }) }) }); photos = photos.map(p => p.id === photo.id ? photo : p); render(); $('editDialog').close(); }
   catch (error) { message('editStatus', error.message, 'error'); }
   finally { $('saveEdit').disabled = false; $('closeEdit').disabled = false; }
 });
 $('cancelDelete').addEventListener('click', () => $('deleteDialog').close());
 $('confirmDelete').addEventListener('click', async () => {
   $('confirmDelete').disabled = true; $('cancelDelete').disabled = true;
-  try { await api(`/photos/${encodeURIComponent(deletingId)}`, { method: 'DELETE' }); photos = photos.filter(p => p.id !== deletingId); render(); $('deleteDialog').close(); }
+  try { await api(`${photoEndpoint(deletingScope)}/${encodeURIComponent(deletingId)}`, { method: 'DELETE' }); photos = photos.filter(p => p.id !== deletingId); render(); $('deleteDialog').close(); await refresh(); }
   catch (error) { message('deleteStatus', error.message, 'error'); }
   finally { $('confirmDelete').disabled = false; $('cancelDelete').disabled = false; }
+});
+$('galleryManager').addEventListener('change', () => { activeGallery = $('galleryManager').value; $('search').value = ''; photos = []; setGallery(); render(); refresh(); });
+$('galleryName').addEventListener('input', () => {
+  const slug = $('galleryName').value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  $('galleryLinkPreview').textContent = slug ? `${window.location.origin}/${slug}` : '';
+});
+$('createGalleryForm').addEventListener('submit', async event => {
+  event.preventDefault(); if (uploadBusy || galleryBusy) return; galleryBusy = true; $('createGalleryButton').disabled = true; $('uploadButton').disabled = true; $('galleryManager').disabled = true; message('galleryStatus', '');
+  try { const gallery = await api('/galleries', { method: 'POST', body: JSON.stringify({ name: $('galleryName').value }) }); activeGallery = gallery.slug; $('galleryName').value = ''; $('galleryLinkPreview').textContent = ''; $('search').value = ''; await refresh(); message('galleryStatus', 'Created.'); }
+  catch (error) { message('galleryStatus', error.message, 'error'); }
+  finally { galleryBusy = false; $('createGalleryButton').disabled = false; $('uploadButton').disabled = false; $('galleryManager').disabled = false; }
+});
+$('copyGalleryLink').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('galleryLink').href); message('galleryStatus', 'Link copied.'); }
+  catch { message('galleryStatus', 'Copy the link shown above.'); }
 });
 window.addEventListener('beforeunload', event => { if (uploadBusy || uploadedUrl) { event.preventDefault(); event.returnValue = ''; } });
 if (token && config.useD1) {

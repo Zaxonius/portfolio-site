@@ -1,3 +1,4 @@
+import { customGalleryRoute } from './custom-galleries.js';
 const categories = new Set(['wildlife', 'sport', 'motorsport', 'other']);
 const encoder = new TextEncoder();
 const now = () => Math.floor(Date.now() / 1000);
@@ -63,10 +64,16 @@ export default {
         const { results } = await stmt.all();
         return reply(results);
       }
+      if (/^\/galleries\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(path) && request.method === 'GET') {
+        headers['Access-Control-Allow-Origin'] = '*';
+        return await customGalleryRoute({ request, path, env, reply, jsonBody, validatePhoto, authenticated: false });
+      }
       const bearer = request.headers.get('Authorization')?.match(/^Bearer ([a-f0-9]{64})$/)?.[1];
       const tokenHash = bearer ? await hash(bearer) : '';
       const session = bearer && await env.DB.prepare('SELECT expires_at FROM sessions WHERE token_hash = ? AND expires_at > ?').bind(tokenHash, now()).first();
       if (!session) return reply({ error: 'Please sign in again.' }, 401);
+      const customResponse = await customGalleryRoute({ request, path, env, reply, jsonBody, validatePhoto, authenticated: true });
+      if (customResponse) return customResponse;
       if (path === '/session' && request.method === 'GET') return reply({ success: true });
       if (path === '/logout' && request.method === 'POST') {
         await env.DB.prepare('DELETE FROM sessions WHERE token_hash = ?').bind(tokenHash).run();
@@ -106,7 +113,7 @@ export default {
       }
       return reply({ error: 'Not found.' }, 404);
     } catch (error) {
-      if (/Choose|Captions|Invalid|Use an image|Send JSON|Request is/.test(error.message)) return reply({ error: error.message }, 400);
+      if (/Choose|Captions|Invalid|Use an image|Send JSON|Request is|Gallery name|gallery name is reserved/.test(error.message)) return reply({ error: error.message }, 400);
       console.error('API request failed:', error.message);
       return reply({ error: 'The photo service is temporarily unavailable. Please try again.' }, 503);
     }

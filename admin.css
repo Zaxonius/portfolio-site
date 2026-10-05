@@ -20,6 +20,13 @@ button:disabled { opacity: .5; cursor: wait; }
 :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .login { max-width: 340px; }
 .upload { max-width: 500px; }
+.gallery-manager { max-width: 500px; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 1px solid #333; }
+.create-gallery { display: flex; gap: 12px; }
+.create-gallery input { min-width: 0; }
+#galleryLinkPreview, #galleryStatus { font-size: 13px; overflow-wrap: anywhere; }
+#galleryLinkPreview { color: #aaa; }
+#shareGallery { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+#galleryLink { overflow-wrap: anywhere; text-decoration: underline; }
 #loginButton, #uploadButton, #saveEdit { margin-top: 20px; background: #fff; color: #000; border-color: #fff; }
 #loginButton:hover, #uploadButton:hover, #saveEdit:hover { background: #ddd; }
 #preview { display: block; max-width: 100%; max-height: 240px; margin-top: 16px; object-fit: contain; }

@@ -36,6 +36,10 @@ Run `npm run db:local` to initialise local D1. Create gitignored `backend/.dev.v
 
 ## Admin behaviour
 
+Custom galleries are created by name in the admin. A name such as `Qantas 2026` creates `/qantas-2026`, displaying the original name above the same photo layout as the public galleries. Select a custom gallery under Manage photos to upload photos with captions, edit captions, or remove photos. Category controls are hidden for custom galleries. Open or copy the displayed link to share it.
+
+Custom galleries are omitted from the homepage and public API listings. Only admin sessions can list or create them. Their individual links are accessible without signing in and carry `noindex, nofollow`; they are unlisted rather than password-protected. Pages Functions serve these root links using the existing gallery template. Custom records use separate D1 tables, so uploads never appear in public categories. Apply `backend/custom-galleries.sql` to existing D1 databases before deploying this API version.
+
 The studio supports previews, gallery counts, caption search, gallery filters, caption/category editing, removal and logout. Writes and upload proxy requests require a one-hour server-backed session. Logout revokes the session. Login attempts are limited to five per IP per 15 minutes. Captions render as text rather than HTML.
 
 Image preparation preserves aspect ratio and never enlarges small photographs. If image storage succeeds but publishing fails, retry publishing reuses the uploaded image. Removing a photograph removes its public database record; the Cloudinary original remains available.
