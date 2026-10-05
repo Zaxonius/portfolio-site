@@ -1,18 +1,41 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Photo Studio · Keyte Hipkins</title><link rel="icon" href="images/favicon.png"><link rel="stylesheet" href="admin.css"><script src="config.js" defer></script><script src="admin.js" defer></script></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin | Keyte Hipkins Photography</title>
+  <link rel="icon" href="images/favicon.png">
+  <link rel="stylesheet" href="admin.css">
+  <script src="config.js" defer></script>
+  <script src="admin.js" defer></script>
+</head>
 <body>
-<header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">KH</span><span>Keyte Hipkins<small>PHOTOGRAPHY STUDIO</small></span></a><div class="header-actions"><a href="index.html" target="_blank" rel="noopener">View website ↗</a><button id="logout" class="quiet" hidden>Sign out</button></div></header>
-<main>
-<section id="loginBox" class="login-card"><span class="eyebrow">YOUR CREATIVE SPACE</span><h1>Welcome back.</h1><p>Sign in to add photos and curate your galleries.</p><form id="loginForm"><label for="passwordInput">Admin password</label><input type="password" id="passwordInput" autocomplete="current-password" required maxlength="256"><button id="loginButton" type="submit">Sign in →</button></form><p id="loginStatus" role="status" aria-live="polite"></p></section>
-<div id="adminPanel" hidden>
-<section class="page-heading"><div><span class="eyebrow">PORTFOLIO MANAGER</span><h1>A home for your best work.</h1><p>Upload, organise and fine-tune your photography.</p></div><span class="session-badge">● Signed in</span></section>
-<div class="stats" id="stats"></div><div class="workspace">
-<section class="panel upload-panel"><div class="panel-heading"><h2>Add a photograph</h2><span class="step-label">01 / UPLOAD</span></div><p class="muted">Choose a photo, add a caption, and pick its gallery.</p><form id="uploadForm">
-<label class="file-zone" for="fileInput"><span class="upload-icon">↑</span><strong id="fileLabel">Choose a photograph</strong><span>JPEG, PNG or WebP · up to 10 MB</span><input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" required></label>
-<img id="preview" alt="Preview of selected photograph" hidden><label for="description">Caption <span class="muted">(optional)</span></label><textarea id="description" rows="3" maxlength="500" placeholder="e.g. Butterfly, Melbourne Zoo"></textarea><label for="gallery">Gallery</label><select id="gallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select><button id="uploadButton" type="submit">Publish photograph →</button><p id="status" role="status" aria-live="polite"></p></form></section>
-<section class="panel library-panel"><div class="panel-heading"><div><h2>Your photographs</h2><p class="muted" id="photoCount">Loading your library…</p></div><button id="refresh" class="quiet">Refresh</button></div><div class="library-tools"><label class="search-label" for="search">Search captions<input id="search" type="search" placeholder="Search your photographs…"></label><label for="filter">Gallery<select id="filter"><option value="all">All galleries</option><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select></label></div><p id="libraryStatus" role="status" aria-live="polite"></p><div id="photoGrid" class="photo-grid"></div></section>
-</div></div></main>
-<dialog id="editDialog"><form id="editForm"><div class="panel-heading"><h2>Edit photograph</h2><button type="button" id="closeEdit" class="quiet" aria-label="Close editor">✕</button></div><img id="editPreview" alt="Photograph being edited"><label for="editDescription">Caption</label><textarea id="editDescription" rows="3" maxlength="500"></textarea><label for="editGallery">Gallery</label><select id="editGallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select><p id="editStatus" role="status"></p><button id="saveEdit" type="submit">Save changes</button></form></dialog>
-<dialog id="deleteDialog"><h2>Remove this photograph?</h2><p>It will disappear from your portfolio. The original image stays in Cloudinary.</p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete" class="quiet">Keep photograph</button><button id="confirmDelete" class="danger">Remove photograph</button></div></dialog>
-<footer class="studio-footer">KEYTE HIPKINS PHOTOGRAPHY <span>Make room for the next great shot.</span></footer>
-</body></html>
+  <header><a href="index.html">Back to website</a><button id="logout" hidden>Sign out</button></header>
+  <main>
+    <h1>Admin</h1>
+    <section id="loginBox" class="login">
+      <form id="loginForm"><label for="passwordInput">Password</label><input type="password" id="passwordInput" autocomplete="current-password" required maxlength="256"><button id="loginButton" type="submit">Sign in</button></form>
+      <p id="loginStatus" role="status" aria-live="polite"></p>
+    </section>
+    <div id="adminPanel" hidden>
+      <section class="upload">
+        <h2>Upload photo</h2>
+        <form id="uploadForm">
+          <label for="fileInput" id="fileLabel">Photo</label><input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" required>
+          <img id="preview" alt="Selected photo" hidden>
+          <label for="description">Caption (optional)</label><textarea id="description" rows="2" maxlength="500"></textarea>
+          <label for="gallery">Gallery</label><select id="gallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select>
+          <button id="uploadButton" type="submit">Upload</button><p id="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+      <section class="library">
+        <div class="heading"><h2>Photos</h2><button id="refresh">Refresh</button></div>
+        <div class="library-tools"><label for="search">Search<input id="search" type="search" placeholder="Search captions"></label><label for="filter">Gallery<select id="filter"><option value="all">All galleries</option><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select></label></div>
+        <p id="photoCount"></p><p id="libraryStatus" role="status" aria-live="polite"></p><div id="photoGrid" class="photo-grid"></div>
+      </section>
+    </div>
+  </main>
+  <dialog id="editDialog"><form id="editForm"><div class="heading"><h2>Edit photo</h2><button type="button" id="closeEdit">Close</button></div><img id="editPreview" alt="Photo being edited"><label for="editDescription">Caption</label><textarea id="editDescription" rows="2" maxlength="500"></textarea><label for="editGallery">Gallery</label><select id="editGallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select><p id="editStatus" role="status"></p><button id="saveEdit" type="submit">Save</button></form></dialog>
+  <dialog id="deleteDialog"><h2>Remove photo?</h2><p>This photo will be removed from your gallery.</p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete">Cancel</button><button id="confirmDelete">Remove</button></div></dialog>
+</body>
+</html>

@@ -32,18 +32,11 @@ async function refresh() {
   finally { $('refresh').disabled = false; }
 }
 function render() {
-  $('stats').replaceChildren();
-  for (const [key, label] of [['all', 'Total photographs'], ...Object.entries(names)]) {
-    const item = document.createElement('div'); item.className = 'stat';
-    const title = document.createElement('span'); title.textContent = label;
-    const count = document.createElement('strong'); count.textContent = key === 'all' ? photos.length : photos.filter(p => p.gallery === key).length;
-    item.append(title, count); $('stats').append(item);
-  }
   const search = $('search').value.trim().toLowerCase(), filter = $('filter').value;
   const visible = photos.filter(p => (filter === 'all' || p.gallery === filter) && p.description.toLowerCase().includes(search));
   $('photoCount').textContent = `${visible.length} of ${photos.length} photographs`;
   $('photoGrid').replaceChildren();
-  if (!visible.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = photos.length ? 'No photographs match. Try another caption or gallery.' : 'Your next great shot belongs here. Add your first photograph.'; $('photoGrid').append(empty); }
+  if (!visible.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = photos.length ? 'No matching photos.' : 'No photos yet.'; $('photoGrid').append(empty); }
   for (const photo of visible) {
     const card = document.createElement('article'); card.className = 'photo-card';
     const image = document.createElement('img'); image.src = photo.url.replace('/upload/', '/upload/w_500,q_auto,f_auto/'); image.alt = photo.description || names[photo.gallery]; image.loading = 'lazy';
@@ -75,7 +68,7 @@ $('logout').addEventListener('click', async () => {
 $('fileInput').addEventListener('change', () => {
   uploadedUrl = ''; selectedFile = $('fileInput').files[0];
   if (previewUrl) URL.revokeObjectURL(previewUrl);
-  $('preview').hidden = true; $('fileLabel').textContent = 'Choose a photograph'; message('status', '');
+  $('preview').hidden = true; $('fileLabel').textContent = 'Photo'; message('status', '');
   if (!selectedFile) return;
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(selectedFile.type) || selectedFile.size > 10 * 1024 * 1024 || !selectedFile.size) {
     selectedFile = null; $('fileInput').value = ''; message('status', 'Choose a JPEG, PNG or WebP image under 10 MB.', 'error'); return;
@@ -105,13 +98,13 @@ $('uploadForm').addEventListener('submit', async event => {
     }
     message('status', 'Publishing to your gallery…');
     await api('/photos', { method: 'POST', body: JSON.stringify({ url: uploadedUrl, description: caption, gallery }) });
-    message('status', 'Published! Your photograph is now in the gallery.', 'success');
-    uploadedUrl = ''; selectedFile = null; $('uploadForm').reset(); $('preview').hidden = true; $('fileLabel').textContent = 'Choose a photograph';
+    message('status', 'Uploaded.', 'success');
+    uploadedUrl = ''; selectedFile = null; $('uploadForm').reset(); $('preview').hidden = true; $('fileLabel').textContent = 'Photo';
     if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = ''; }
-    $('uploadButton').textContent = 'Publish photograph →'; await refresh();
+    $('uploadButton').textContent = 'Upload'; await refresh();
   } catch (error) {
     message('status', uploadedUrl ? `${error.message} Your image is uploaded; click Retry publishing to save it.` : error.message, 'error');
-    $('uploadButton').textContent = uploadedUrl ? 'Retry publishing →' : 'Publish photograph →';
+    $('uploadButton').textContent = uploadedUrl ? 'Retry publishing' : 'Upload';
   } finally { uploadBusy = false; controls.forEach(el => el.disabled = false); }
 });
 $('refresh').addEventListener('click', refresh); $('search').addEventListener('input', render); $('filter').addEventListener('change', render);
