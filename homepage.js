@@ -1,10 +1,29 @@
 import { workVideos } from './work-videos.js?v=7';
 const dialog = document.getElementById('contactDialog');
-document.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => dialog.showModal()));
-document.getElementById('closeContact').addEventListener('click', () => dialog.close());
+let closingContact = false;
+document.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => {
+  if (dialog.open) return;
+  dialog.classList.remove('is-closing');
+  dialog.showModal();
+  document.documentElement.classList.add('contact-open');
+}));
+async function closeContact() {
+  if (!dialog.open || closingContact) return;
+  closingContact = true;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    dialog.classList.add('is-closing');
+    await Promise.allSettled(dialog.getAnimations().map(animation => animation.finished));
+  }
+  dialog.close();
+  dialog.classList.remove('is-closing');
+  document.documentElement.classList.remove('contact-open');
+  closingContact = false;
+}
+document.getElementById('closeContact').addEventListener('click', closeContact);
+dialog.addEventListener('cancel', event => { event.preventDefault(); closeContact(); });
 dialog.addEventListener('click', event => {
   const rect = dialog.getBoundingClientRect();
-  if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close();
+  if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeContact();
 });
 const portrait = new Image();
 portrait.onload = () => { const target = document.getElementById('portrait'); target.src = portrait.src; target.alt = 'Keyte Hipkins'; };
