@@ -1,4 +1,4 @@
-import { workVideos } from './work-videos.js?v=6';
+import { workVideos } from './work-videos.js?v=7';
 const dialog = document.getElementById('contactDialog');
 document.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => dialog.showModal()));
 document.getElementById('closeContact').addEventListener('click', () => dialog.close());
@@ -11,7 +11,7 @@ portrait.onload = () => { const target = document.getElementById('portrait'); ta
 portrait.src = '/images/portrait.jpg';
 const shuffled = [...workVideos];
 for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
-const selected = shuffled.slice(0, 2);
+const selected = shuffled.slice(0, 3);
 if (selected.length) {
   const container = document.getElementById('work-videos'); container.replaceChildren(); container.classList.toggle('multiple-videos', selected.length > 1);
   for (const video of selected) {
@@ -20,4 +20,19 @@ if (selected.length) {
     iframe.title = video.title; iframe.loading = 'lazy'; iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
     iframe.referrerPolicy = 'strict-origin-when-cross-origin'; iframe.allowFullscreen = true; container.append(iframe);
   }
+}
+
+if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    }
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.home-section > h2, .category-card, .work-heading, .work-videos').forEach(element => {
+    element.classList.add('scroll-reveal');
+    observer.observe(element);
+  });
 }
