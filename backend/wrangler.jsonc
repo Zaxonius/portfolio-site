@@ -1,0 +1,15 @@
+{
+  "name": "photo-api-d1",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-05",
+  "vars": {
+    "ALLOWED_ORIGINS": "https://keytehipkins.com,https://www.keytehipkins.com,https://keytehipkins.pages.dev,https://portfolio-site-bdl.pages.dev,http://localhost:8080,http://127.0.0.1:8080",
+    "CLOUDINARY_CLOUD_NAME": "do3eq8jz9",
+    "CLOUDINARY_UPLOAD_PRESET": "portfolio-upload"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "portfolio-photos",
+    "database_id": "f9848f43-6a64-4a89-bde7-342709601f99"
+  }]
+}
