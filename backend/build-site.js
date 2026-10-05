@@ -1,6 +1,6 @@
 import { cp, mkdir, writeFile, rm } from 'node:fs/promises';
 await mkdir('dist', { recursive: true });
-for (const file of ['index.html', 'gallery.html', 'admin.html', 'style.css', 'script.js', 'admin.css', 'admin.js', 'config.js']) await cp(file, `dist/${file}`);
+for (const file of ['index.html', 'gallery.html', 'admin.html', 'style.css', 'script.js', 'admin.css', 'admin.js', 'image-preparation.js', 'config.js']) await cp(file, `dist/${file}`);
 await cp('images', 'dist/images', { recursive: true });
 await cp('admin.css', 'dist/admin-black-v3.css');
 await cp('admin.css', 'dist/admin-black-v4.css');

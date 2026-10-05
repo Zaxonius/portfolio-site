@@ -42,7 +42,9 @@ Custom galleries are omitted from the homepage and public API listings. Only adm
 
 The studio supports previews, gallery counts, caption search, gallery filters, caption/category editing, removal and logout. Writes and upload proxy requests require a one-hour server-backed session. Logout revokes the session. Login attempts are limited to five per IP per 15 minutes. Captions render as text rather than HTML.
 
-Image preparation preserves aspect ratio and never enlarges small photographs. If image storage succeeds but publishing fails, retry publishing reuses the uploaded image. Removing a photograph removes its public database record; the Cloudinary original remains available.
+Source JPEG, PNG and WebP photos have no application file-size cap. Before any upload, the browser resizes the image to a maximum 1000-pixel long edge, preserves aspect ratio, and encodes a JPEG of at most 200 KB, reducing quality and dimensions further if needed. It never enlarges small photos. Canvas re-encoding removes the original metadata. Only the compressed JPEG is sent to Cloudinary; the full-resolution source stays on the user's computer. Browser image-decoding and memory limits still apply. The API's 256 KB limit is for compressed output rather than source files.
+
+If image storage succeeds but publishing fails, retry publishing reuses the uploaded image. Removing a photograph removes its public database record; its compressed Cloudinary copy remains available. Compression applies to new uploads; existing Cloudinary files are unchanged. Visitors can download the small website copies but do not receive the full-resolution source through this upload flow.
 
 The existing unsigned Cloudinary upload preset is retained for compatibility. It was already exposed by the previous frontend. Restrict its formats, sizes, folders and quotas in Cloudinary, or switch to signed uploads later. Worker authentication protects the new upload route but cannot make the previously exposed unsigned preset private.
 

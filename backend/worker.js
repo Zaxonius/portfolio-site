@@ -80,10 +80,10 @@ export default {
         return reply({ success: true });
       }
       if (path === '/uploads' && request.method === 'POST') {
-        if (Number(request.headers.get('Content-Length')) > 10 * 1024 * 1024) return reply({ error: 'Image must be under 10 MB.' }, 413);
+        if (Number(request.headers.get('Content-Length')) > 300 * 1024) return reply({ error: 'The compressed image is too large. Please try again.' }, 413);
         const form = await request.formData();
         const file = form.get('file');
-        if (!(file instanceof File) || file.size > 10 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return reply({ error: 'Choose a JPEG, PNG or WebP image under 10 MB.' }, 400);
+        if (!(file instanceof File) || !file.size || file.size > 256 * 1024 || file.type !== 'image/jpeg') return reply({ error: 'Upload a compressed JPEG using the admin page.' }, 400);
         const upload = new FormData();
         upload.set('file', file);
         upload.set('upload_preset', env.CLOUDINARY_UPLOAD_PRESET);

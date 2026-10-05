@@ -1,3 +1,4 @@
+import { compressImage } from './image-preparation.js?v=5';
 const config = window.PORTFOLIO_CONFIG;
 const $ = id => document.getElementById(id);
 const names = { wildlife: 'Wildlife & animals', sport: 'Sport', motorsport: 'Motorsport', other: 'Other photos' };
@@ -94,20 +95,11 @@ $('fileInput').addEventListener('change', () => {
   if (previewUrl) URL.revokeObjectURL(previewUrl);
   $('preview').hidden = true; $('fileLabel').textContent = 'Photo'; message('status', '');
   if (!selectedFile) return;
-  if (!['image/jpeg', 'image/png', 'image/webp'].includes(selectedFile.type) || selectedFile.size > 10 * 1024 * 1024 || !selectedFile.size) {
-    selectedFile = null; $('fileInput').value = ''; message('status', 'Choose a JPEG, PNG or WebP image under 10 MB.', 'error'); return;
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(selectedFile.type) || !selectedFile.size) {
+    selectedFile = null; $('fileInput').value = ''; message('status', 'Choose a JPEG, PNG or WebP image.', 'error'); return;
   }
   previewUrl = URL.createObjectURL(selectedFile); $('preview').src = previewUrl; $('preview').hidden = false; $('fileLabel').textContent = selectedFile.name;
 });
-async function compress(file) {
-  const image = await createImageBitmap(file);
-  try {
-    const scale = Math.min(1, 1600 / Math.max(image.width, image.height));
-    const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
-    const context = canvas.getContext('2d'); context.fillStyle = '#ffffff'; context.fillRect(0, 0, canvas.width, canvas.height); context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return await new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Could not prepare the image. Try another file.')), 'image/jpeg', .88));
-  } finally { image.close(); }
-}
 $('uploadForm').addEventListener('submit', async event => {
   event.preventDefault(); if (uploadBusy || galleryBusy) return;
   if (!selectedFile) { message('status', 'Choose a photograph first.', 'error'); return; }
@@ -116,7 +108,7 @@ $('uploadForm').addEventListener('submit', async event => {
   const caption = $('description').value.trim(), gallery = $('gallery').value, uploadScope = activeGallery;
   try {
     if (!uploadedUrl) {
-      message('status', 'Preparing your photograph…'); const blob = await compress(selectedFile);
+      message('status', 'Compressing…'); const blob = await compressImage(selectedFile);
       const form = new FormData(); form.append('file', blob, 'photograph.jpg');
       message('status', 'Uploading your photograph…'); const data = await api('/uploads', { method: 'POST', body: form }); uploadedUrl = data.url;
     }
