@@ -9,12 +9,13 @@ main { max-width: 1100px; margin: auto; padding: 20px 24px 60px; }
 h1 { font-size: 28px; font-weight: 500; margin: 0 0 32px; }
 h2 { font-size: 20px; font-weight: 500; margin: 0 0 20px; }
 label { display: block; font-size: 13px; margin: 18px 0 8px; }
-input, textarea, select, button { font: inherit; border: 1px solid #444; border-radius: 4px; background: #111; color: #fff; padding: 10px 12px; }
+input, textarea, select, button { font: inherit; border: 1px solid #444; border-radius: 4px; background: #000; color: #fff; padding: 10px 12px; }
 input, textarea, select { width: 100%; }
 textarea { resize: vertical; }
 input[type=file] { padding: 8px; }
-button { cursor: pointer; }
-button:hover { background: #222; border-color: #888; }
+button, input::file-selector-button { cursor: pointer; background: #fff; color: #000; border: 1px solid #fff; border-radius: 4px; padding: 10px 12px; }
+input::file-selector-button { margin-right: 12px; }
+button:hover, input::file-selector-button:hover { background: #ddd; border-color: #ddd; }
 button:disabled { opacity: .5; cursor: wait; }
 :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .login { max-width: 340px; }
