@@ -264,3 +264,5 @@ body.fade-out {
     font-weight: 700;
 
 }
+
+.logo-mark { width: 40px; height: 40px; display: block; object-fit: contain; }

@@ -1,4 +1,12 @@
 window.addEventListener('load', () => document.body.classList.add('fade-in'));
+if (document.querySelector('[data-logo]')) {
+  const logo = new Image();
+  logo.onload = () => {
+    document.querySelectorAll('[data-logo]').forEach(image => { image.src = logo.src; });
+    document.querySelectorAll('link[rel*=icon]').forEach(icon => { icon.href = logo.src; icon.type = 'image/png'; });
+  };
+  logo.src = '/images/logo.png';
+}
 document.querySelectorAll('.transition-link').forEach(link => {
   link.addEventListener('click', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;

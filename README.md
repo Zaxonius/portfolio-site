@@ -16,6 +16,8 @@ D1 Free allows 500 MB per database, 5 million rows read/day and 100,000 rows wri
 
 ## Build and deploy
 
+The homepage uses the existing Arial/black/white design, a portrait and name introduction, a contact dialog, the four existing category cards, and a YouTube work section. Replace the portrait placeholder by adding `images/portrait.jpg`, and the temporary K mark by adding `images/logo.png`. The supplied PNG is used on the homepage and gallery headers and as the favicon. Add verified YouTube IDs/titles to `work-videos.js` to randomly show up to two videos per page load; the current public channel has one verified video.
+
 Run `npm install`, `npm test`, then `npm run build`. The build copies only public website assets into `dist/`; backend code, dependencies, private backups and credentials are excluded.
 
 Both Cloudflare Pages projects use `npm run build` and publish `dist/` from the `main` branch. GitHub changes trigger the connected builds. To deploy manually:

@@ -1,108 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Keyte Hipkins Photography</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon.png">
-
-    <link rel="shortcut icon" href="./images/favicon.png">
-
-    <link rel="apple-touch-icon" href="./images/favicon.png">
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-<script>
-    if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
-            if (!user) {
-                window.netlifyIdentity.on("login", () => {
-                    document.location.href = "/admin/";
-                });
-            }
-        });
-    }
-</script>
-
-<body>
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-        <img src="images/signature.png" class="hero-logo">
-
-    </section>
-
-    <!-- CATEGORY GRID -->
-
-    <section class="category-grid">
-
-        <a href="gallery.html?category=wildlife" class="category-card transition-link">
-            <img src="images/wildlife.jpg">
-            <div class="overlay">
-                <h2>Wildlife and Animals</h2>
-            </div>
-        </a>
-
-        <a href="gallery.html?category=sport" class="category-card transition-link">
-            <img src="images/sport.jpg">
-            <div class="overlay">
-                <h2>Sport</h2>
-            </div>
-        </a>
-
-        <a href="gallery.html?category=motorsport" class="category-card transition-link">
-            <img src="images/motorsport.jpg">
-            <div class="overlay">
-                <h2>Motorsport</h2>
-            </div>
-        </a>
-
-        <a href="gallery.html?category=other" class="category-card transition-link">
-            <img src="images/other.jpg">
-            <div class="overlay">
-                <h2>Other Photos</h2>
-            </div>
-        </a>
-
-    </section>
-
-    <!-- CONTACT -->
-
-    <footer class="contact">
-
-        <h2>Contact / Social Media</h2>
-
-        <div class="contact-links">
-
-            <a href="mailto:photography@keytehipkins.com">
-                Email
-            </a>
-
-            <a href="https://instagram.com/keytehipkins" target="_blank">
-                Instagram
-            </a>
-
-            <a href="https://youtube.com/@zaxtechnology" target="_blank">
-                YouTube
-            </a>
-
-        </div>
-
-    </footer>
-
-    <script src="script.js"></script>
-
-    <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "732800f0a1224c18ac9d1deff5459575"}'></script><!-- End Cloudflare Web Analytics -->
-
-</body>
-
-</html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Keyte Hipkins Photography</title>
+<meta name="description" content="Photographer and editor based in Melbourne, Australia. Contact me for enquiries!">
+<link id="site-icon" rel="icon" type="image/svg+xml" href="/images/logo-placeholder.svg"><link rel="stylesheet" href="/style.css?v=6"><link rel="stylesheet" href="/homepage.css?v=6"><script src="/homepage.js?v=6" type="module"></script>
+</head><body class="homepage fade-in">
+<header class="home-header"><a href="/" aria-label="Keyte Hipkins home"><img data-logo class="logo-mark" src="/images/logo-placeholder.svg" alt="" width="40" height="40"></a><nav aria-label="Main navigation"><a href="#galleries">Galleries</a><a href="#work">My work</a><button class="text-button" data-contact>Contact</button></nav></header>
+<main>
+<section class="hero" aria-labelledby="intro-name"><div class="intro"><img id="portrait" class="portrait" src="/images/portrait-placeholder.svg" alt="Portrait placeholder" width="360" height="440" fetchpriority="high"><div class="intro-text"><h1 id="intro-name">Keyte Hipkins</h1><p>Photographer and editor based in Melbourne, Australia.<br><button class="contact-trigger" data-contact>Contact me for enquiries!</button></p></div></div><a class="scroll-cue" href="#galleries">Scroll <span aria-hidden="true">↓</span></a></section>
+<section id="galleries" class="home-section" aria-labelledby="galleries-title"><h2 id="galleries-title">Galleries</h2><div class="category-grid">
+<a href="/gallery?category=wildlife" class="category-card transition-link"><img src="/images/wildlife.jpg" alt="Wildlife and animals" loading="lazy" width="1000" height="750"><div class="overlay"><h2>Wildlife and Animals</h2></div></a>
+<a href="/gallery?category=sport" class="category-card transition-link"><img src="/images/sport.jpg" alt="Sport" loading="lazy" width="1000" height="750"><div class="overlay"><h2>Sport</h2></div></a>
+<a href="/gallery?category=motorsport" class="category-card transition-link"><img src="/images/motorsport.jpg" alt="Motorsport" loading="lazy" width="1000" height="750"><div class="overlay"><h2>Motorsport</h2></div></a>
+<a href="/gallery?category=other" class="category-card transition-link"><img src="/images/other.jpg" alt="Other photos" loading="lazy" width="1000" height="750"><div class="overlay"><h2>Other Photos</h2></div></a>
+</div></section>
+<section id="work" class="home-section work-section" aria-labelledby="work-title"><div class="work-heading"><h2 id="work-title">My work</h2><a href="https://www.youtube.com/@zaxtechnology" target="_blank" rel="noopener">Zax Tech on YouTube ↗</a></div><div id="work-videos" class="work-videos"><iframe src="https://www.youtube-nocookie.com/embed/08pimp2wSCA" title="I 3D Printed a Working Camera Lens" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></section>
+</main>
+<dialog id="contactDialog" class="contact-dialog" aria-labelledby="contact-title"><div class="dialog-heading"><h2 id="contact-title">Contact</h2><button id="closeContact" class="white-button" autofocus>Close</button></div><div class="contact-methods"><a class="white-button" href="mailto:photography@keytehipkins.com">Email</a><a class="white-button" href="https://instagram.com/keytehipkins" target="_blank" rel="noopener">Instagram</a><a class="white-button" href="https://www.youtube.com/@zaxtechnology" target="_blank" rel="noopener">YouTube</a></div></dialog>
+<script src="/script.js?v=6"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"732800f0a1224c18ac9d1deff5459575"}'></script>
+</body></html>
