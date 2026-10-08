@@ -1,4 +1,4 @@
-const reserved = new Set(['admin', 'gallery', 'index', 'images', 'api', 'photos', 'galleries', 'health', 'uploads', 'session', 'logout', 'admin-login', 'backend', 'functions', 'dist', 'wildlife', 'sport', 'motorsport', 'other', 'favicon', 'robots', 'sitemap', 'assets', 'config', 'style', 'script']);
+const reserved = new Set(['work', 'admin', 'gallery', 'index', 'images', 'api', 'photos', 'galleries', 'health', 'uploads', 'session', 'logout', 'admin-login', 'backend', 'functions', 'dist', 'wildlife', 'sport', 'motorsport', 'other', 'favicon', 'robots', 'sitemap', 'assets', 'config', 'style', 'script']);
 export function galleryIdentity(name) {
   if (typeof name !== 'string' || !name.trim() || name.trim().length > 80) throw new Error('Gallery name must be 1–80 characters.');
   name = name.trim();

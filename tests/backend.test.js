@@ -86,3 +86,17 @@ test('photo validation rejects foreign URLs and oversized captions', () => {
   assert.throws(() => validatePhoto({ ...photo, description: 'x'.repeat(501) }, 'do3eq8jz9'));
   assert.throws(() => validatePhoto({ ...photo, gallery: "wildlife'; DROP TABLE photos" }, 'do3eq8jz9'));
 });
+
+test('public photos can be published and edited without a category', async () => {
+  const { request, sqlite } = setup();
+  try {
+    const { token } = await (await request('/admin-login', 'POST', { password: 'test-password-only' })).json();
+    const created = await request('/photos', 'POST', { url: photo.url, description: 'Anywhere, any subject' }, token);
+    assert.equal(created.status, 201);
+    const record = await created.json();
+    assert.equal((await (await request('/photos')).json())[0].id, record.id);
+    const updated = await request(`/photos/${record.id}`, 'PATCH', { description: 'Updated description' }, token);
+    assert.equal(updated.status, 200);
+    assert.equal((await updated.json()).description, 'Updated description');
+  } finally { sqlite.close(); }
+});

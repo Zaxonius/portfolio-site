@@ -6,12 +6,12 @@ export async function hash(value) {
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value))), b => b.toString(16).padStart(2, '0')).join('');
 }
 export function validatePhoto(body, cloudName) {
-  if (!body || !categories.has(body.gallery)) throw new Error('Choose a valid gallery.');
+  if (!body || (body.gallery !== undefined && !categories.has(body.gallery))) throw new Error('Choose a valid gallery.');
   if (typeof body.description !== 'string' || body.description.length > 500) throw new Error('Captions must be 500 characters or fewer.');
   let url;
   try { url = new URL(body.url); } catch { throw new Error('Invalid image URL.'); }
   if (url.protocol !== 'https:' || url.hostname !== 'res.cloudinary.com' || !url.pathname.startsWith(`/${cloudName}/image/upload/`) || url.username || url.password) throw new Error('Use an image from your Cloudinary account.');
-  return { url: url.href, description: body.description.trim(), gallery: body.gallery };
+  return { url: url.href, description: body.description.trim(), gallery: body.gallery ?? 'other' };
 }
 async function jsonBody(request) {
   if (!request.headers.get('Content-Type')?.includes('application/json')) throw new Error('Send JSON data.');

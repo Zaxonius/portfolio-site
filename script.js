@@ -1,13 +1,5 @@
 document.body.classList.add('fade-in');
 window.addEventListener('pageshow', () => { document.body.classList.remove('fade-out'); document.body.classList.add('fade-in'); });
-if (document.querySelector('[data-logo]')) {
-  const logo = new Image();
-  logo.onload = () => {
-    document.querySelectorAll('[data-logo]').forEach(image => { image.src = logo.src; });
-    document.querySelectorAll('link[rel*=icon]').forEach(icon => { icon.href = logo.src; icon.type = 'image/png'; });
-  };
-  logo.src = '/images/logo.png';
-}
 document.querySelectorAll('.transition-link').forEach(link => {
   link.addEventListener('click', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -21,6 +13,7 @@ async function loadGallery() {
   const category = new URLSearchParams(window.location.search).get('category');
   const slug = window.location.pathname.replace(/^\/|\/$/g, '');
   const custom = slug !== 'gallery' && slug !== 'gallery.html';
+  if (!custom) { window.location.replace('/#galleries'); return; }
   const names = { wildlife: 'Wildlife and Animals', sport: 'Sport', motorsport: 'Motorsport', other: 'Other Photos' };
   const status = document.createElement('p'); status.className = 'gallery-status'; status.setAttribute('role', 'status'); container.replaceChildren(status);
   if (!custom && !Object.hasOwn(names, category)) { status.textContent = 'Choose a gallery from the home page.'; return; }

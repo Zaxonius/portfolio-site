@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin | Keyte Hipkins Photography</title>
-  <link rel="icon" href="images/favicon.png">
+  <link rel="icon" type="image/svg+xml" href="/images/khfavicon.svg?v=1">
   <style>html,body{background:#000;color:#fff}button{background:#fff;color:#000}</style>
-  <link rel="stylesheet" href="admin-black-v4.css">
-  <script src="config.js?v=5" defer></script>
-  <script src="admin.js?v=5" type="module"></script>
+  <link rel="stylesheet" href="admin.css?v=6">
+  <script src="config.js?v=6" defer></script>
+  <script src="admin.js?v=6" type="module"></script>
 </head>
 <body>
   <header><a href="index.html">Back to website</a><button id="logout" hidden>Sign out</button></header>
@@ -19,30 +19,24 @@
       <p id="loginStatus" role="status" aria-live="polite"></p>
     </section>
     <div id="adminPanel" hidden>
-      <section class="gallery-manager">
-        <h2>Custom galleries</h2>
-        <form id="createGalleryForm"><label for="galleryName">Name</label><div class="create-gallery"><input id="galleryName" required maxlength="80" placeholder="e.g. Qantas"><button id="createGalleryButton" type="submit">Create</button></div><p id="galleryLinkPreview"></p><p id="galleryStatus" role="status" aria-live="polite"></p></form>
-        <label for="galleryManager">Manage photos</label><select id="galleryManager"><option value="">Public galleries</option></select>
-        <div id="shareGallery" hidden><a id="galleryLink" target="_blank" rel="noopener"></a><button id="copyGalleryLink" type="button">Copy link</button></div>
-      </section>
-      <section class="upload">
+<section class="upload">
         <h2 id="uploadTitle">Upload photo</h2>
         <form id="uploadForm">
           <label for="fileInput" id="fileLabel">Photo</label><input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" required>
           <img id="preview" alt="Selected photo" hidden>
           <label for="description">Caption (optional)</label><textarea id="description" rows="2" maxlength="500"></textarea>
-          <div id="uploadCategory"><label for="gallery">Gallery</label><select id="gallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select></div>
+
           <button id="uploadButton" type="submit">Upload</button><p id="status" role="status" aria-live="polite"></p>
         </form>
       </section>
       <section class="library">
         <div class="heading"><h2>Photos</h2><button id="refresh">Refresh</button></div>
-        <div class="library-tools"><label for="search">Search<input id="search" type="search" placeholder="Search captions"></label><label for="filter" id="filterLabel">Gallery<select id="filter"><option value="all">All galleries</option><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select></label></div>
+        <div class="library-tools"><label for="search">Search<input id="search" type="search" placeholder="Search captions"></label></div>
         <p id="photoCount"></p><p id="libraryStatus" role="status" aria-live="polite"></p><div id="photoGrid" class="photo-grid"></div>
       </section>
     </div>
   </main>
-  <dialog id="editDialog"><form id="editForm"><div class="heading"><h2>Edit photo</h2><button type="button" id="closeEdit">Close</button></div><img id="editPreview" alt="Photo being edited"><label for="editDescription">Caption</label><textarea id="editDescription" rows="2" maxlength="500"></textarea><div id="editCategory"><label for="editGallery">Gallery</label><select id="editGallery"><option value="wildlife">Wildlife & animals</option><option value="sport">Sport</option><option value="motorsport">Motorsport</option><option value="other">Other photos</option></select></div><p id="editStatus" role="status"></p><button id="saveEdit" type="submit">Save</button></form></dialog>
-  <dialog id="deleteDialog"><h2>Remove photo?</h2><p>This photo will be removed from your gallery.</p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete">Cancel</button><button id="confirmDelete">Remove</button></div></dialog>
+  <dialog id="editDialog"><form id="editForm"><div class="heading"><h2>Edit photo</h2><button type="button" id="closeEdit">Close</button></div><img id="editPreview" alt="Photo being edited"><label for="editDescription">Caption</label><textarea id="editDescription" rows="2" maxlength="500"></textarea><p id="editStatus" role="status"></p><button id="saveEdit" type="submit">Save</button></form></dialog>
+  <dialog id="deleteDialog"><h2>Remove photo?</h2><p>This photo will be removed from your website.</p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete">Cancel</button><button id="confirmDelete">Remove</button></div></dialog>
 </body>
 </html>

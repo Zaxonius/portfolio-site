@@ -1,0 +1,23 @@
+.work-page .home-header { position: relative; }
+.work-main { width: 90%; max-width: 1400px; margin: 40px auto 80px; }
+.work-main h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 24px; }
+.channel-summary { margin-bottom: 32px; }
+.channel-summary h2 { font-size: 1.4rem; margin: 0; }
+
+.channel-summary h2 a:hover { text-decoration: none; }
+.channel-summary p, .swipe-hint { color: #aaa; font-size: .9rem; line-height: 1.7; }
+.channel-stats { display: flex; flex-wrap: wrap; gap: 32px; margin-top: 24px; }
+.channel-stats[hidden] { display: none; }
+.channel-stats dd { font-size: 1.15rem; margin-bottom: 4px; }
+.channel-stats dt { color: #aaa; font-size: .8rem; }
+.carousel-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.carousel-heading h2 { font-size: 1.1rem; }
+.carousel-controls { display: flex; gap: 10px; }
+.carousel-controls button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid #ffffff30; border-radius: 50%; background: none; color: white; cursor: pointer; font-size: 1.1rem; }
+.carousel-controls button:disabled { opacity: .3; cursor: default; }
+.video-carousel { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: #555 #111; padding-bottom: 16px; }
+.video-card { flex: 0 0 clamp(240px, 23vw, 300px); scroll-snap-align: start; margin: 0; }
+.video-card iframe { display: block; width: 100%; aspect-ratio: 9 / 16; border: 0; border-radius: 12px; background: #111; }
+.video-card figcaption { margin-top: 12px; font-size: .82rem; line-height: 1.6; color: #aaa; }
+.swipe-hint { margin-top: 16px; font-size: .8rem; }
+@media (max-width: 600px) { .work-main { margin-top: 32px; } .work-main h1 { margin-bottom: 24px; } .video-card { flex-basis: 76vw; } .video-carousel { gap: 20px; } }

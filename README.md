@@ -16,7 +16,7 @@ D1 Free allows 500 MB per database, 5 million rows read/day and 100,000 rows wri
 
 ## Build and deploy
 
-The homepage uses the black/white design with Manrope typography and reduced-motion-aware animations, a portrait and name introduction, a contact dialog, the four existing category cards, and a YouTube work section. Replace the portrait placeholder by adding `images/portrait.jpg`, and the temporary K mark by adding `images/logo.png`. The supplied PNG is used on the homepage and gallery headers and as the favicon. Add verified YouTube Shorts IDs/titles to `work-videos.js` to randomly show three portrait videos per page load.
+The homepage uses the black/white design with Manrope typography and reduced-motion-aware animations, a portrait and name introduction, a contact dialog, a randomized photo gallery limited to eight horizontal rows, and a brief contact section. Replace the portrait placeholder by adding `images/portrait.jpg`, and use `images/khlogo.svg` for the header logo. `images/khfavicon.svg` uses the same mark on a black background for browser tabs. The supplied PNG is used on the homepage and gallery headers and as the favicon. Add verified YouTube Shorts IDs/titles to `work-videos.js` to show up to eight randomized portrait videos in the swipeable carousel on `/work`. Channel figures and social links are maintained in `work-profile.js`.
 
 Run `npm install`, `npm test`, then `npm run build`. The build copies only public website assets into `dist/`; backend code, dependencies, private backups and credentials are excluded.
 
