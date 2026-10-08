@@ -61,12 +61,11 @@ html { scroll-behavior: smooth; }
   .home-section { padding-top: 45px; padding-bottom: 45px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } body, .category-card img, .scroll-reveal, .white-button, .dialog-close, .contact-trigger { transition: none; transform: none; } .intro, .scroll-cue span, .contact-dialog[open], .contact-dialog::backdrop { animation: none; } .scroll-reveal { opacity: 1; } }
-/* Rows follow the original proportions; captions sit below the image area. */
+/* Equal-height photo rows preserve the original proportions. */
 .photo-gallery { width: 100%; }
-.photo-row { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 28px; }
+.photo-row { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px; }
 .photo-tile { flex: none; min-width: 0; margin: 0; }
 .photo-tile img { display: block; width: 100%; object-fit: contain; background: #111; }
-.photo-tile figcaption { min-height: 1.5em; margin-top: 10px; color: #aaa; font-size: .82rem; line-height: 1.6; overflow-wrap: anywhere; white-space: pre-line; }
 #gallery-status { color: #aaa; font-size: .9rem; }
 #gallery-status:empty { display: none; }
 .home-contact { border-top: 1px solid #ffffff20; padding-bottom: 70px; }
@@ -91,3 +90,28 @@ html { scroll-behavior: smooth; }
 .homepage .contact-methods .white-button { justify-content: flex-start; }
 .simple-links:empty { display: none; }
 @media (prefers-reduced-motion: reduce) { .homepage .link-button, .homepage .white-button { transition: none; } }
+
+.photo-open { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; }
+.photo-open img { transition: opacity .2s ease; }
+.photo-open:hover img { opacity: .85; }
+.photo-viewer-open { overflow: hidden; scrollbar-gutter: stable; }
+.photo-viewer { position: fixed; inset: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 64px 5% 28px; border: 0; background: #000; color: #fff; }
+.photo-viewer::backdrop { background: #000; animation: photo-backdrop-in .3s ease both; }
+@keyframes photo-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .photo-viewer::backdrop { animation: none; } }
+.viewer-close { position: absolute; top: 18px; right: 5%; width: 40px; height: 40px; }
+.viewer-content { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; height: 100%; margin: 0; }
+.viewer-content img { flex: 1; min-height: 0; width: 100%; object-fit: contain; }
+.viewer-content figcaption { flex: none; width: 100%; max-width: 800px; max-height: 25dvh; overflow-y: auto; color: #bbb; font-size: .9rem; line-height: 1.6; text-align: center; white-space: pre-line; overflow-wrap: anywhere; }
+.viewer-content figcaption[hidden] { display: none; }
+@media (max-width: 600px) { .photo-viewer { padding: 64px 18px 24px; } .viewer-close { right: 18px; } .viewer-content { gap: 16px; } }
+@media (prefers-reduced-motion: reduce) { .photo-open img { transition: none; } }
+
+.viewer-arrow { position: absolute; top: 50%; z-index: 2; width: 44px; height: 44px; font-size: 1.4rem; background: #0009; }
+.viewer-arrow:hover { transform: none; background: #333; }
+.viewer-arrow:disabled { opacity: .25; cursor: default; }
+.viewer-previous { left: 16px; }
+.viewer-next { right: 16px; }
+.photo-viewer.is-closing::backdrop { animation: photo-backdrop-out .36s ease forwards; }
+@keyframes photo-backdrop-out { to { opacity: 0; } }
+@media (max-width: 600px) { .viewer-arrow { top: 18px; width: 40px; height: 40px; } .viewer-previous { left: 18px; } .viewer-next { left: 70px; right: auto; } }
