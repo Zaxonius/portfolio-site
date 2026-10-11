@@ -6,9 +6,9 @@
   <title>Admin | Keyte Hipkins Photography</title>
   <link rel="icon" type="image/svg+xml" href="/images/khfavicon.svg?v=1">
   <style>html,body{background:#000;color:#fff}button{background:#fff;color:#000}</style>
-  <link rel="stylesheet" href="admin.css?v=6">
+  <link rel="stylesheet" href="admin.css?v=7">
   <script src="config.js?v=6" defer></script>
-  <script src="admin.js?v=6" type="module"></script>
+  <script src="admin.js?v=7" type="module"></script>
 </head>
 <body>
   <header><a href="index.html">Back to website</a><button id="logout" hidden>Sign out</button></header>
@@ -19,6 +19,12 @@
       <p id="loginStatus" role="status" aria-live="polite"></p>
     </section>
     <div id="adminPanel" hidden>
+      <section class="gallery-manager">
+        <h2>Private galleries</h2><p class="gallery-note">Shared by link and kept off the public website. Anyone with the link can view it.</p>
+        <form id="createGalleryForm"><label for="galleryName">Name</label><div class="create-gallery"><input id="galleryName" required maxlength="80" placeholder="e.g. Qantas"><button id="createGalleryButton" type="submit">Create</button></div><p id="galleryLinkPreview"></p><p id="galleryStatus" role="status" aria-live="polite"></p></form>
+        <label for="galleryManager">Manage photos</label><select id="galleryManager"><option value="">Public website</option></select>
+        <div id="shareGallery" hidden><a id="galleryLink" target="_blank" rel="noopener"></a><button id="copyGalleryLink" type="button">Copy link</button></div>
+      </section>
 <section class="upload">
         <h2 id="uploadTitle">Upload photo</h2>
         <form id="uploadForm">

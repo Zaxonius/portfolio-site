@@ -38,11 +38,11 @@ Run `npm run db:local` to initialise local D1. Create gitignored `backend/.dev.v
 
 ## Admin behaviour
 
-Custom galleries are created by name in the admin. A name such as `Qantas 2026` creates `/qantas-2026`, displaying the original name above the same photo layout as the public galleries. Select a custom gallery under Manage photos to upload photos with captions, edit captions, or remove photos. Category controls are hidden for custom galleries. Open or copy the displayed link to share it.
+Private (unlisted) galleries are created by name in the admin. A name such as `Qantas 2026` creates `/qantas-2026`, displaying the original name above the same photo layout as the public galleries. Select a custom gallery under Manage photos to upload photos with captions, edit captions, or remove photos. The Public website option manages the homepage photo grid; private galleries have separate uploads and captions. Open or copy the displayed link to share it.
 
 Custom galleries are omitted from the homepage and public API listings. Only admin sessions can list or create them. Their individual links are accessible without signing in and carry `noindex, nofollow`; they are unlisted rather than password-protected. Pages Functions serve these root links using the existing gallery template. Custom records use separate D1 tables, so uploads never appear in public categories. Apply `backend/custom-galleries.sql` to existing D1 databases before deploying this API version.
 
-The studio supports previews, gallery counts, caption search, gallery filters, caption/category editing, removal and logout. Writes and upload proxy requests require a one-hour server-backed session. Logout revokes the session. Login attempts are limited to five per IP per 15 minutes. Captions render as text rather than HTML.
+The studio supports previews, gallery counts, caption search, private gallery selection, caption editing, removal and logout. Writes and upload proxy requests require a one-hour server-backed session. Logout revokes the session. Login attempts are limited to five per IP per 15 minutes. Captions render as text rather than HTML.
 
 Source JPEG, PNG and WebP photos have no application file-size cap. Before any upload, the browser resizes the image to a maximum 1000-pixel long edge, preserves aspect ratio, and encodes a JPEG of at most 200 KB, reducing quality and dimensions further if needed. It never enlarges small photos. Canvas re-encoding removes the original metadata. Only the compressed JPEG is sent to Cloudinary; the full-resolution source stays on the user's computer. Browser image-decoding and memory limits still apply. The API's 256 KB limit is for compressed output rather than source files.
 

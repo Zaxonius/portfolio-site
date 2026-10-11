@@ -55,3 +55,5 @@ dialog::backdrop { background: #000c; }
 .dialog-actions { display: flex; gap: 12px; margin-top: 20px; }
 @media (max-width: 700px) { .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .photo-card img { height: 160px; } }
 @media (max-width: 440px) { header, main { padding-left: 18px; padding-right: 18px; } .library-tools { flex-direction: column; gap: 0; } .photo-grid { grid-template-columns: 1fr; } .photo-card img { height: auto; max-height: 340px; } }
+
+.gallery-note { color: #aaa; font-size: 13px; line-height: 1.6; margin: -8px 0 20px; }
