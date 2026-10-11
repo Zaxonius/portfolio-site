@@ -289,4 +289,4 @@ body.fade-out {
 @media (max-width: 600px) { .gallery-title { margin-top: 40px; margin-bottom: 32px; } }
 @media (prefers-reduced-motion: reduce) { body, .gallery-item, .gallery-item img, .category-card img, .back-button span { transition: none; } .gallery-title { animation: none; } .gallery-item.reveal-pending { opacity: 1; transform: none; } }
 
-.private-gallery-notice { margin: 16px auto 0; max-width: 600px; color: #aaa; font-size: .85rem; line-height: 1.6; padding: 0 20px; }
+.private-gallery-notice { margin: 12px 0 0; color: #aaa; font-size: .85rem; line-height: 1.6; padding: 0; text-align: left; }
