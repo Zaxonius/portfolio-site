@@ -100,3 +100,24 @@ test('public photos can be published and edited without a category', async () =>
     assert.equal((await updated.json()).description, 'Updated description');
   } finally { sqlite.close(); }
 });
+
+
+test('retired public category names are available for private galleries', async () => {
+  const { request, sqlite } = setup();
+  try {
+    const { token } = await (await request('/admin-login', 'POST', { password: 'test-password-only' })).json();
+    for (const name of ['Wildlife', 'Sport', 'Motorsport', 'Other']) {
+      const created = await request('/galleries', 'POST', { name }, token);
+      assert.equal(created.status, 201);
+      const gallery = await created.json();
+      assert.equal(gallery.slug, name.toLowerCase());
+      const page = await request('/galleries/' + gallery.slug);
+      assert.equal(page.status, 200);
+      assert.equal((await page.json()).gallery.name, name);
+      assert.equal((await request('/galleries', 'POST', { name }, token)).status, 409);
+    }
+    for (const name of ['Admin', 'Work', 'Gallery', 'Images', 'Photos']) {
+      assert.equal((await request('/galleries', 'POST', { name }, token)).status, 400);
+    }
+  } finally { sqlite.close(); }
+});
