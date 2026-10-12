@@ -1,9 +1,9 @@
-import { publishBatch, applyPhotoChanges } from './photo-management.js?v=8';
+import { publishBatch, applyPhotoChanges, deletePhotos } from './photo-management.js?v=9';
 import { compressImage } from './image-preparation.js?v=5';
 const config = window.PORTFOLIO_CONFIG;
 const $ = id => document.getElementById(id);
 let token = sessionStorage.getItem('portfolio-session') || '';
-let photos = [], deletingId = '';
+let photos = [], deletingPhotos = [];
 let queue = [], batchScope = null, settingsBusy = false, settingsPhotos = [], settingsScope = '';
 const selected = new Set();
 let settingsRequest = 0;
@@ -78,7 +78,7 @@ function render() {
     const caption = document.createElement('p'); caption.textContent = photo.description || 'Untitled photograph';
     const actions = document.createElement('div'); actions.className = 'photo-actions';
     const edit = document.createElement('button'); edit.className = 'quiet'; edit.textContent = 'Settings'; edit.addEventListener('click', () => openSettings([photo]));
-    const remove = document.createElement('button'); remove.className = 'quiet'; remove.textContent = 'Remove'; remove.addEventListener('click', () => { deletingId = photo.id; deletingScope = activeGallery; message('deleteStatus', ''); $('deleteDialog').showModal(); });
+    const remove = document.createElement('button'); remove.className = 'quiet'; remove.textContent = 'Remove'; remove.addEventListener('click', () => openDelete([photo]));
     actions.append(edit, remove); details.append(caption, actions); card.append(image, details); $('photoGrid').append(card);
   }
 }
@@ -155,6 +155,7 @@ function updateSelection(visible) {
   $('selectionCount').textContent = selected.size + ' selected';
   $('editSelected').disabled = !selected.size || uploadBusy || settingsBusy;
   $('clearSelection').disabled = !selected.size;
+  $('deleteSelected').disabled = !selected.size || uploadBusy || settingsBusy;
   $('selectAll').checked = Boolean(visible.length) && visible.every(photo => selected.has(photo.id));
   $('selectAll').indeterminate = visible.some(photo => selected.has(photo.id)) && !$('selectAll').checked;
 }
@@ -205,12 +206,35 @@ $('editForm').addEventListener('submit', async event => {
   } catch (error) { message('editStatus', error.message, 'error'); }
   finally { settingsBusy = false; controls.forEach(el => el.disabled = false); $('editDescription').disabled = !$('captionToggle').checked; renderQueue(); }
 });
-$('cancelDelete').addEventListener('click', () => $('deleteDialog').close());
+function openDelete(items) {
+  if (uploadBusy || settingsBusy || galleryBusy || !items.length) return;
+  deletingPhotos = [...items]; deletingScope = activeGallery;
+  const count = items.length;
+  $('deleteTitle').textContent = count === 1 ? 'Delete photo?' : 'Delete ' + count + ' photos?';
+  const destination = galleries.find(gallery => gallery.slug === deletingScope)?.name || 'the public website';
+  $('deleteDescription').textContent = (count === 1 ? 'This photo' : 'These ' + count + ' photos') + ' will be removed from ' + destination + '. Copies in other galleries stay unchanged.';
+  $('confirmDelete').textContent = count === 1 ? 'Delete photo' : 'Delete ' + count + ' photos';
+  message('deleteStatus', ''); $('deleteDialog').showModal();
+}
+$('deleteSelected').addEventListener('click', () => openDelete(photos.filter(photo => selected.has(photo.id))));
+$('cancelDelete').addEventListener('click', () => { if (!settingsBusy) $('deleteDialog').close(); });
+$('deleteDialog').addEventListener('cancel', event => { if (settingsBusy) event.preventDefault(); });
 $('confirmDelete').addEventListener('click', async () => {
-  $('confirmDelete').disabled = true; $('cancelDelete').disabled = true;
-  try { await api(`${photoEndpoint(deletingScope)}/${encodeURIComponent(deletingId)}`, { method: 'DELETE' }); photos = photos.filter(p => p.id !== deletingId); render(); $('deleteDialog').close(); await refresh(); }
-  catch (error) { message('deleteStatus', error.message, 'error'); }
-  finally { $('confirmDelete').disabled = false; $('cancelDelete').disabled = false; }
+  if (settingsBusy || uploadBusy) return;
+  settingsBusy = true;
+  const controls = [$('confirmDelete'), $('cancelDelete'), $('galleryManager'), $('createGalleryButton'), $('uploadButton'), $('logout'), $('refresh')];
+  controls.forEach(control => control.disabled = true);
+  try {
+    const result = await deletePhotos(deletingPhotos, deletingScope, api, photo => {
+      photos = photos.filter(item => item.id !== photo.id); selected.delete(photo.id);
+    });
+    render();
+    if (result.failed.length) {
+      deletingPhotos = result.failed.map(item => item.photo);
+      $('confirmDelete').textContent = 'Retry ' + deletingPhotos.length + ' remaining';
+      message('deleteStatus', result.completed + ' deleted. ' + deletingPhotos.length + ' remain: ' + result.failed[0].error, 'error');
+    } else { $('deleteDialog').close(); await refresh(); }
+  } finally { settingsBusy = false; controls.forEach(control => control.disabled = false); renderQueue(); render(); }
 });
 $('galleryManager').addEventListener('change', () => { if (batchScope !== null && queue.some(item => item.state !== 'published')) { $('galleryManager').value = activeGallery; message('status', 'Finish or clear the upload queue before changing galleries.', 'error'); return; } batchScope = null; selected.clear(); $('editDialog').close(); $('deleteDialog').close(); activeGallery = $('galleryManager').value; $('search').value = ''; photos = []; setGallery(); render(); refresh(); });
 $('galleryName').addEventListener('input', () => {

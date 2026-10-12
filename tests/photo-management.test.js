@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { publishBatch, applyPhotoChanges } from '../photo-management.js';
+import { publishBatch, applyPhotoChanges, deletePhotos } from '../photo-management.js';
 
 test('batch retries retain uploaded URLs, captions and successful saves', async () => {
   const items = ['one', 'two', 'three'].map(name => ({ file: name, caption: name + ' caption', state: 'queued', url: '' }));
@@ -75,4 +75,31 @@ test('retry after a partial gallery operation skips captions for an already remo
   const second=await applyPhotoChanges(first.failed.map(item=>item.photo),'a',changes,unreliable);
   assert.equal(second.completed,1); assert.equal(store.b.length,1);
   assert.equal(calls.filter(call=>call.method === 'PATCH').length,1);
+});
+
+
+test('bulk deletion only removes selected gallery records and retains failures for retry', async () => {
+  const photos = [{id:'first'}, {id:'second'}, {id:'third'}];
+  const calls = [], removed = [];
+  const api = async (path, options) => {
+    calls.push({path, method:options.method});
+    if (path.endsWith('/second')) throw new Error('Offline');
+    if (path.endsWith('/third')) { const error = new Error('Already deleted'); error.status=404; throw error; }
+  };
+  const result=await deletePhotos(photos,'wildlife',api,photo=>removed.push(photo.id));
+  assert.equal(result.completed,2);
+  assert.deepEqual(result.failed.map(item=>item.photo.id),['second']);
+  assert.deepEqual(removed,['first','third']);
+  assert.ok(calls.every(call=>call.path.startsWith('/galleries/wildlife/photos/') && call.method==='DELETE'));
+  const retried=[];
+  await deletePhotos(result.failed.map(item=>item.photo),'wildlife',async path=>retried.push(path));
+  assert.deepEqual(retried,['/galleries/wildlife/photos/second']);
+});
+
+test('bulk deletion stops after session expiry and retains all remaining selections', async () => {
+  let calls=0;
+  const result=await deletePhotos([{id:'one'},{id:'two'}],'',async()=>{
+    calls++; const error=new Error('Sign in again'); error.status=401; throw error;
+  });
+  assert.equal(calls,1); assert.equal(result.completed,0); assert.equal(result.failed.length,2);
 });

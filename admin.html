@@ -8,7 +8,7 @@
   <style>html,body{background:#000;color:#fff}button{background:#fff;color:#000}</style>
   <link rel="stylesheet" href="admin.css?v=8">
   <script src="config.js?v=6" defer></script>
-  <script src="admin.js?v=8" type="module"></script>
+  <script src="admin.js?v=9" type="module"></script>
 </head>
 <body>
   <header><a href="index.html">Back to website</a><button id="logout" hidden>Sign out</button></header>
@@ -29,11 +29,11 @@
       <section class="library">
         <div class="heading"><h2>Photos</h2><button id="refresh">Refresh</button></div>
         <div class="library-tools"><label for="search">Search<input id="search" type="search" placeholder="Search captions"></label></div>
-        <div class="selection-tools"><label><input id="selectAll" type="checkbox"> Select all shown</label><span id="selectionCount">0 selected</span><button id="editSelected" type="button" disabled>Photo settings</button><button id="clearSelection" type="button" class="quiet" disabled>Clear selection</button></div><p id="photoCount"></p><p id="libraryStatus" role="status" aria-live="polite"></p><div id="photoGrid" class="photo-grid"></div>
+        <div class="selection-tools"><label><input id="selectAll" type="checkbox"> Select all shown</label><span id="selectionCount">0 selected</span><button id="editSelected" type="button" disabled>Photo settings</button><button id="deleteSelected" type="button" class="quiet" disabled>Delete selected</button><button id="clearSelection" type="button" class="quiet" disabled>Clear selection</button></div><p id="photoCount"></p><p id="libraryStatus" role="status" aria-live="polite"></p><div id="photoGrid" class="photo-grid"></div>
       </section>
     </div>
   </main>
   <dialog id="editDialog"><form id="editForm"><div class="heading"><h2 id="editTitle">Photo settings</h2><button type="button" id="closeEdit">Close</button></div><img id="editPreview" alt="Photo being edited"><label id="captionToggleLabel"><input id="captionToggle" type="checkbox"> Apply the same caption to selected photos</label><label for="editDescription">Caption (optional)</label><textarea id="editDescription" rows="2" maxlength="500"></textarea><h3>Private galleries</h3><p class="muted">Add or remove these photos from a gallery. Other copies stay unchanged.</p><div id="membershipControls"></div><p id="editStatus" role="status" aria-live="polite"></p><button id="saveEdit" type="submit">Save changes</button></form></dialog>
-  <dialog id="deleteDialog"><h2>Remove photo?</h2><p>This photo will be removed from your website.</p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete">Cancel</button><button id="confirmDelete">Remove</button></div></dialog>
+  <dialog id="deleteDialog"><h2 id="deleteTitle">Remove photo?</h2><p id="deleteDescription"></p><p id="deleteStatus" role="status"></p><div class="dialog-actions"><button id="cancelDelete">Cancel</button><button id="confirmDelete">Remove</button></div></dialog>
 </body>
 </html>

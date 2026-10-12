@@ -50,3 +50,25 @@ export async function applyPhotoChanges(photos, scope, { caption, memberships },
   }
   return { completed, failed };
 }
+
+
+export async function deletePhotos(photos, scope, api, onDeleted = () => {}) {
+  const endpoint = scope ? '/galleries/' + encodeURIComponent(scope) + '/photos' : '/photos';
+  const failed = [];
+  let completed = 0;
+  for (let index = 0; index < photos.length; index++) {
+    const photo = photos[index];
+    try {
+      try { await api(endpoint + '/' + encodeURIComponent(photo.id), { method: 'DELETE' }); }
+      catch (error) { if (error.status !== 404) throw error; }
+      completed++; onDeleted(photo);
+    } catch (error) {
+      failed.push({ photo, error: error.message });
+      if (error.status === 401) {
+        failed.push(...photos.slice(index + 1).map(photo => ({ photo, error: error.message })));
+        break;
+      }
+    }
+  }
+  return { completed, failed };
+}
